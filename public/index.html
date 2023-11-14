@@ -1,14 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <button onclick="signInGit()">sign-in with gitHub</button>
-  <script type="module">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="signIn()">sign-in with gitHub</button>
+    <div id="display"></div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        GithubAuthProvider,
+      } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyARJ5qO9Rfcx42lDkO9lxHQAg-y5rfjOm4",
+        authDomain: "hubgit-project.firebaseapp.com",
+        projectId: "hubgit-project",
+        storageBucket: "hubgit-project.appspot.com",
+        messagingSenderId: "627063598616",
+        appId: "1:627063598616:web:36f3c7dc16e83baf36dd6d",
+        measurementId: "G-0Z0WFJPVMD",
+      };
+
+      const app = initializeApp(firebaseConfig);
     
-  </script>
-</body>
+      const auth = getAuth(app);
+      const provider = new GithubAuthProvider();
+
+      const signIn = () => {
+        // alert(123456)
+        signInWithPopup(auth, provider)
+        .then((result) => {
+    // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+    const credential = GithubAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+
+    // The signed-in user info.
+    const user = result.user;
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GithubAuthProvider.credentialFromError(error);
+    // ...
+  });
+      };
+
+
+      window.signIn = signIn
+    </script>
+  </body>
 </html>
